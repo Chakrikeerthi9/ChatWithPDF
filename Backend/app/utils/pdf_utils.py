@@ -1,9 +1,8 @@
 import fitz  # PyMuPDF
 
-def extract_text_from_pdf(pdf_path):
-    doc = fitz.open(pdf_path)
-    full_text = ""
+def extract_text_from_pdf(pdf_file):
+    doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
+    text = ""
     for page in doc:
-        full_text += page.get_text() + "\n"
-    doc.close()
-    return full_text.strip()
+        text += page.get_text()
+    return text
