@@ -1,30 +1,34 @@
-import os
+import requests
+from io import BytesIO
 from flask import Blueprint, request, jsonify
 from werkzeug.utils import secure_filename
 from .utils.pdf_utils import extract_text_from_pdf
+
+
 
 pdf_routes = Blueprint("pdf_routes", __name__)
 @pdf_routes.route("/")
 def home():
     return "Hello World"
 
-@pdf_routes.route("/upload", methods=["POST"])
+@pdf_routes.route("/upload", methods=["POST", "OPTIONS"])
 def upload_pdf():
-    # Ensure a file is sent
-    if "pdf" not in request.files:
-        return jsonify({"error": "No PDF uploaded"}), 400
+    if request.method == "OPTIONS":
+        # Preflight request
+        response = jsonify({"message": "CORS preflight passed"})
+        response.headers.add("Access-Control-Allow-Origin", "http://localhost:3000")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+        response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+        return response, 200
 
-    file = request.files["pdf"]
-    if file.filename == "":
-        return jsonify({"error": "Empty filename"}), 400
+    # Normal POST request
+    data = request.json
+    fileUrl = data.get("fileUrl")
+    print(fileUrl)
 
-    # Save file securely in temp folder
-    filename = secure_filename(file.filename)
-    filepath = os.path.join("temp", filename)
-    file.save(filepath)
+    response = requests.get(fileUrl)
+    pdf_file = BytesIO(response.content)
+    extracted_text = extract_text_from_pdf(pdf_file)
 
-    # Extract text using PyMuPDF
-    extracted_text = extract_text_from_pdf(filepath)
-
-    # Return text as JSON response
     return jsonify({"text": extracted_text})
+

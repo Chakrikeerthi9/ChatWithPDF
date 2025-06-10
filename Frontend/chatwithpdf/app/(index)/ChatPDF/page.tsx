@@ -1,10 +1,17 @@
-import React from 'react'
+import Sidebar from "@/app/components/Sidebar"
 
 const ChatPDF = () => {
+
   return (
-    <div>
-      <h1>ChatPDF after sign-in</h1>
+    <div className="layout-wrapper">
+    <div className="main-container">
+        <Sidebar />
+      <div className="content-box">
+        {/* main content */}
+        {/* footer */}
+      </div>
     </div>
+  </div>
   )
 }
 
