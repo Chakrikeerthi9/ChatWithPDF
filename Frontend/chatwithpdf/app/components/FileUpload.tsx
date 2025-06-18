@@ -26,14 +26,15 @@ export function FileUpload() {
       console.log(res.url);
 
       const fileUrl = res.url;
-      await axios.post('http://127.0.0.1:5000/upload', 
+       await axios.post('http://127.0.0.1:5000/upload', 
         { fileUrl },
         {
           headers: {
             'Content-Type': 'application/json',
-          }
+          },
         }
       );
+      console.log("upload success")
       return res;
     },
     [edgestore],
