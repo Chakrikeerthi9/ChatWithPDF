@@ -21,6 +21,7 @@
 html, body {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   font-family: var(--font-main);
   background-color: var(--bg);
   color: var(--text);
@@ -43,6 +44,7 @@ body, .layout-wrapper {
   align-items: center;
   padding-left: 2rem;
   padding-right: 2rem;
+  
 }
 
 /* Inner content box */
@@ -85,7 +87,6 @@ p {
 * {
   box-sizing: border-box;
   margin: 0;
-  padding: 0;
 }
 
 a {

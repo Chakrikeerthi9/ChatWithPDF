@@ -3,6 +3,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 
 def get_vector_store(text_chunks):
+    print("Getting vector store")
     embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
     vector_store = FAISS.from_texts(texts=text_chunks, embedding=embedding_model)
