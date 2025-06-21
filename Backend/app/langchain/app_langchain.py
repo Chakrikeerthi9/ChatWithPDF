@@ -21,4 +21,4 @@ def get_app_langchain(file_path: str):
     # create conversation chain
     conversation = get_conversation_chain(vector_store)
 
-    return
+    return conversation

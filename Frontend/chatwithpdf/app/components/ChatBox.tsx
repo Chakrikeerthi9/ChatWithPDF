@@ -12,11 +12,31 @@ const ChatBox = () => {
   const { user } = useUser();
   const name = user?.firstName || "User";
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
     setMessages([...messages, { type: "question", text: input }]);
     setInput("");
-    // Later: send to backend and add response
+    
+    // send to backend Flask
+    try{
+      const response = await fetch("http://localhost:5000/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question: input }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to ask question");
+      }
+
+      const data = await response.json();
+      setMessages([...messages, { type: "answer", text: data.answer }]);
+    } catch (error) {
+      console.error("Error:", error);
+      setMessages([...messages, { type: "answer", text: "Sorry, I couldn't answer that question." }]);
+    }
   };
 
   return (
