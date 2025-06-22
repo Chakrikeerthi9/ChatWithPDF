@@ -56,7 +56,7 @@ const ChatBox = ({ uploadId }: { uploadId: string }) => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col w-full h-full">
       <Header name={name} />
 
       {/* Messages */}
@@ -64,13 +64,13 @@ const ChatBox = ({ uploadId }: { uploadId: string }) => {
         {messages.map((msg, i) => (
           <div key={i}>
             <div className="flex justify-end">
-              <div className="max-w-[80%] px-6 py-4 rounded-2xl bg-blue-600 text-white text-sm sm:text-base shadow rounded-br-none">
+              <div className="max-w-[80%] px-6 py-4 rounded-2xl bg-blue-600 text-white text-sm sm:text-base shadow rounded-br-none my-2">
                 {msg.question}
               </div>
             </div>
             {msg.answer && (
               <div className="flex justify-start mt-1">
-                <div className="max-w-[80%] px-6 py-4 rounded-2xl bg-gray-100 text-gray-900 text-sm sm:text-base shadow rounded-bl-none">
+                <div className="max-w-[80%] px-6 py-4 rounded-2xl bg-gray-100 text-gray-900 text-sm sm:text-base shadow rounded-bl-none my-2">
                   {msg.answer}
                 </div>
               </div>

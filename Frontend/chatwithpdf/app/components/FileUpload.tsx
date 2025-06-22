@@ -14,10 +14,7 @@ export function FileUpload({setUploadId}: {setUploadId: (uploadId: string) => vo
   const { edgestore } = useEdgeStore();
   const userInfo = useClerkInfo();
   const [isUploading, setIsUploading] = React.useState(false);
-  const [fileUrl, setFileUrl] = React.useState<string | null>(null);
   const [message, setMessage] = React.useState<string | null>(null);
-
-  console.log(userInfo);
 
   const uploadFn: UploadFn = React.useCallback(
     async ({ file, onProgressChange, signal }) => {
@@ -44,7 +41,7 @@ export function FileUpload({setUploadId}: {setUploadId: (uploadId: string) => vo
       );
       if (response.status === 200) {
         const data = response.data;
-        setMessage(`✅ Uploaded: ID ${data.upload_id}`);
+        setMessage("✅ Uploaded Successfully");
         setUploadId(data.upload_id.toString());
         localStorage.setItem("uploadId", data.upload_id.toString());
       } else {
@@ -58,22 +55,29 @@ export function FileUpload({setUploadId}: {setUploadId: (uploadId: string) => vo
   );
 
   return (
+    <>
     <UploaderProvider uploadFn={uploadFn} autoUpload>
       <FileUploader
         maxFiles={5}
-        maxSize={1024 * 1024 * 1} // 1 MB
+        maxSize={1024 * 1024 * 10} // 1 MB
         accept={{
           'application/pdf': [],
           'text/plain': ['.pdf'],
         }}
-        className='w-[90%]'
+        className='bg-gray-100 w-full'
       />
       {message && (
         <p className="mt-4 text-sm text-green-600 dark:text-green-400">
           {message}
         </p>
       )}
+      {isUploading && (
+        <p className="mt-4 text-sm text-blue-600 dark:text-blue-400">
+          Uploading...
+        </p>
+      )}
     </UploaderProvider>
+      </>
     
     
   );

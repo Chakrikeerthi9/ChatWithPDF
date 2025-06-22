@@ -1,14 +1,16 @@
 import FileUpload from './FileUpload'
-import { useState } from 'react';
 
 const Sidebar = ({setUploadId}: {setUploadId: (uploadId: string) => void}) => {
 
   return (
-        <aside className="w-1/4 bg-white h-full flex flex-col">
-          <h1 className="font-semibold mb-2 text-lg">Hello, <b className="text-blue-800">User</b></h1>
-          <p className="text-sm text-gray-600 mb-4">
+        <aside className="w-1/4 bg-white h-full flex flex-col p-6">
+          <h1 className="font-semibold text-lg">ChatWith<b className="text-blue-800">PDF</b></h1>
+          <h2 className="text-sm text-gray-600 mb-4 italic">
+          "ChatWithPDF is a real-time educational tool that empowers users to interactively engage with study materials. It transforms static PDFs into dynamic learning experiences through instant Q&A and summarization."
+          </h2>
+          <h3 className="text-sm text-blue-400 mb-4 pt-3 pb-3">
             Upload your PDF files here and start chatting with them
-          </p>
+          </h3>
           <FileUpload setUploadId={setUploadId} />
         </aside>
   )

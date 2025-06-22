@@ -9,15 +9,15 @@ const ChatPDF = () => {
 
 
   return (
-    <div className="layout-wrapper">
-  <div className="main-container">
-    {/* Sidebar */}
-    <Sidebar setUploadId={setUploadId} />
+  <div className="layout-wrapper">
+    <div className="main-container">
+      {/* Sidebar */}
+      <Sidebar setUploadId={setUploadId} />
 
-    {/* Main Chat Container */}
-    <div className="content-box">
-      <ChatBox uploadId={uploadId || ""} />
-    </div>
+      {/* Main Chat Container */}
+      <div className="content-box">
+        <ChatBox uploadId={uploadId || ""} />
+      </div>
   </div>
 </div>
 

@@ -91,11 +91,13 @@ def history():
     try:
         data = request.get_json(force=True)
         clerk_user_id = data.get("clerk_user_id")
+        email = data.get("email")
+        name = data.get("name")
         if not clerk_user_id:
             return jsonify({"message": "clerk_user_id is required"}), 400
 
         # get user id
-        user_id = get_or_create_user(clerk_user_id, None, None)  # returns existing user or creates new
+        user_id = get_or_create_user(clerk_user_id, email, name)  # returns existing user or creates new
 
         uploads = fetch_uploads_for_user(user_id)
         return jsonify({"uploads": uploads}), 200

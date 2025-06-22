@@ -20,7 +20,9 @@ export default function PDFHistory({ onSelect }: { onSelect: (uploadId: number) 
       }
     };
 
-    fetchHistory();
+    if (userInfo?.clerk_user_id) {
+      fetchHistory();
+    }
   }, [userInfo]);
 
   return (

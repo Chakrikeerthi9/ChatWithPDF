@@ -6,6 +6,7 @@ import axios from 'axios';
 export default function ChatLog({ uploadId }: { uploadId: number }) {
   const [log, setLog] = useState([]);
 
+  console.log(uploadId, "uploadId");
   useEffect(() => {
     const fetchLog = async () => {
       try {

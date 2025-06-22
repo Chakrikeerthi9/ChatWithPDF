@@ -1,18 +1,29 @@
 import { UserButton } from '@clerk/nextjs'
+import Link from 'next/link'
 import React from 'react'
 
 const Header = ({name}: {name: string}) => {
   return (
-    <header className="mb-4">
-    <div className="flex items-center justify-between pb-2">
-      <div>
-        <h1 className="text-xl font-bold">ChatWithPDF</h1>
-        <p className="text-sm text-gray-600">Hello, {name}</p>
+    <header className="w-full bg-gray-100">
+    <div className="flex flex-row justify-between items-center p-6">
+      <div className="flex flex-col items-start">
+        <h1 className="text-sm text-gray-600">Hello, <b className="text-blue-800">{name}</b></h1>
       </div>
-      <p className="text-sm text-gray-500 hidden sm:block">
-        Ask anything from your uploaded document.
-      </p>
-      <UserButton />
+      <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-row items-center gap-3">
+          <Link href="/History">
+            <h2 className="text-md text-gray-600 hover:text-blue-800 hover:underline">
+              History
+            </h2> 
+          </Link>
+          <Link href="/Payment">
+            <h2 className="text-md text-gray-600 hover:text-blue-800 hover:underline">
+              Payment
+            </h2>
+          </Link>
+        </div>
+        <UserButton/>
+      </div>
     </div>
   </header>
   )
