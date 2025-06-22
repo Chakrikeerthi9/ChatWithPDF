@@ -1,12 +1,13 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import Inputbar from "./Inputbar";
 import Header from "./Header";
 
 const ChatBox = ({ uploadId }: { uploadId: string }) => {
   const [messages, setMessages] = useState<{ question: string; answer?: string }[]>([]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useUser();
   const name = user?.firstName || "User";
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -28,6 +29,7 @@ const ChatBox = ({ uploadId }: { uploadId: string }) => {
 
     // 1. Add question immediately
     setMessages((prev) => [...prev, { question: currentInput }]);
+    setIsLoading(true);
 
     try {
       const response = await fetch("http://localhost:5000/ask", {
@@ -52,6 +54,8 @@ const ChatBox = ({ uploadId }: { uploadId: string }) => {
         updated[updated.length - 1].answer = "Sorry, I couldn't answer that question.";
         return updated;
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -77,6 +81,16 @@ const ChatBox = ({ uploadId }: { uploadId: string }) => {
             )}
           </div>
         ))}
+
+         {/* Loading animation */}
+        {isLoading && (
+          <div className="flex justify-start mt-1">
+            <div className="max-w-[80%] px-6 py-4 rounded-2xl bg-gray-100 text-gray-500 text-sm sm:text-base shadow rounded-bl-none my-2 animate-pulse">
+              Thinking...
+            </div>
+          </div>
+        )}
+
         <div ref={bottomRef} />
       </div>
 

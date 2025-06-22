@@ -22,7 +22,9 @@ const Header = ({name}: {name: string}) => {
             </h2>
           </Link>
         </div>
-        <UserButton/>
+        <div className='hidden md:block'>
+          <UserButton/>
+        </div>
       </div>
     </div>
   </header>

@@ -2,7 +2,7 @@ import { SignIn as ClerkSignIn } from "@clerk/nextjs"
 
 const SignUp = () => {
   return (
-    <div className ="grid grid-cols-2 gap-6">
+    <div className ="md:grid grid-cols-2 gap-6">
         <div className="bg-home"></div>
         <div className="flex justify-center items-center">
           <section className="p-6 w-full text-center">

@@ -34,18 +34,9 @@ body, .layout-wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
 }
 
-/* Page container - centers content */
-.main-container {
-  flex: 1;
-  display: flex;
-  /* justify-content: space-between; */
-  align-items: center;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  
-}
 
 /* Inner content box */
 .content-box {
@@ -68,6 +59,9 @@ body, .layout-wrapper {
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  @media (max-width: 768px) {
+    display: none;
+  }
 }
 
 /* Responsive text */
