@@ -69,16 +69,16 @@ def ask():
         data = request.get_json(force=True)
         question = data.get("question")
         upload_id = data.get("upload_id")
-
+        print(upload_id, "upload_id")
         if not app_langchain:
             return jsonify({'message': 'PDF not loaded yet'}), 400
 
         result = app_langchain.invoke({'question': question})
         answer = result['answer']
-
+  
         # store in chat_log table
         insert_chat_log(upload_id, question, answer)
-
+        print("4")
         return jsonify({'message': 'Question answered', 'answer': answer})
     except Exception as e:
         return jsonify({'message': 'Question failed', 'error': str(e)}), 500

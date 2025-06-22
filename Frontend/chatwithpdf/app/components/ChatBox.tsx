@@ -1,95 +1,89 @@
 "use client";
-import { useState } from "react";
-import { SendHorizonal } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
+import Inputbar from "./Inputbar";
+import Header from "./Header";
 
-const ChatBox = () => {
-  const [messages, setMessages] = useState([
-    { type: "question", text: "What is the summary of page 1?" },
-    { type: "answer", text: "Page 1 introduces the topic and provides background on the research problem." },
-  ]);
+const ChatBox = ({ uploadId }: { uploadId: string }) => {
+  const [messages, setMessages] = useState<{ question: string; answer?: string }[]>([]);
   const [input, setInput] = useState("");
   const { user } = useUser();
   const name = user?.firstName || "User";
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  // Auto-scroll
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
-    setMessages([...messages, { type: "question", text: input }]);
+    const currentInput = input;
     setInput("");
-    
-    // send to backend Flask
-    try{
+
+    if (!uploadId) {
+      console.warn("No uploadId found");
+      return;
+    }
+
+    // 1. Add question immediately
+    setMessages((prev) => [...prev, { question: currentInput }]);
+
+    try {
       const response = await fetch("http://localhost:5000/ask", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ question: input }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: currentInput, upload_id: parseInt(uploadId) }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to ask question");
-      }
-
       const data = await response.json();
-      setMessages([...messages, { type: "answer", text: data.answer }]);
+      const answer = data.answer;
+
+      // 2. Add answer to the last question
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1].answer = answer;
+        return updated;
+      });
     } catch (error) {
       console.error("Error:", error);
-      setMessages([...messages, { type: "answer", text: "Sorry, I couldn't answer that question." }]);
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1].answer = "Sorry, I couldn't answer that question.";
+        return updated;
+      });
     }
   };
 
   return (
     <div className="flex flex-col h-full">
-  {/* Header */}
-  <header className="mb-4">
-    <div className="flex items-center justify-between pb-2">
-      <div>
-        <h1 className="text-xl font-bold">ChatWithPDF</h1>
-        <p className="text-sm text-gray-600">Hello, {name}</p>
-      </div>
-      <p className="text-sm text-gray-500 hidden sm:block">
-        Ask anything from your uploaded document.
-      </p>
-      <UserButton />
-    </div>
-  </header>
+      <Header name={name} />
 
-  {/* Messages */}
-  <div className="flex-1 overflow-y-auto space-y-4 pb-4">
-    {messages.map((msg, i) => (
-      <div key={i} className={`flex ${msg.type === "question" ? "justify-end" : "justify-start"}`}>
-        <div
-          className={`max-w-[80%] px-6 py-5 rounded-2xl shadow text-sm sm:text-base ${
-            msg.type === "question"
-              ? "bg-blue-600 text-white rounded-br-none"
-              : "bg-gray-100 text-gray-900 rounded-bl-none"
-          }`}
-        >
-          {msg.text}
-        </div>
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto space-y-4 pb-4 px-2">
+        {messages.map((msg, i) => (
+          <div key={i}>
+            <div className="flex justify-end">
+              <div className="max-w-[80%] px-6 py-4 rounded-2xl bg-blue-600 text-white text-sm sm:text-base shadow rounded-br-none">
+                {msg.question}
+              </div>
+            </div>
+            {msg.answer && (
+              <div className="flex justify-start mt-1">
+                <div className="max-w-[80%] px-6 py-4 rounded-2xl bg-gray-100 text-gray-900 text-sm sm:text-base shadow rounded-bl-none">
+                  {msg.answer}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+        <div ref={bottomRef} />
       </div>
-    ))}
-  </div>
 
-  {/* Input */}
-  <div className="pt-3">
-    <div className="flex items-center border rounded-full px-4 py-2 shadow-sm bg-gray-100">
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Ask something about your PDF..."
-        className="flex-1 bg-transparent outline-none text-sm"
-        onKeyDown={(e) => e.key === "Enter" && handleSend()}
-      />
-      <button onClick={handleSend} className="text-blue-600 hover:text-blue-800">
-        <SendHorizonal size={20} />
-      </button>
+      {/* Input */}
+      <Inputbar input={input} setInput={setInput} handleSend={handleSend} />
     </div>
-  </div>
-</div>
-)
-}
+  );
+};
 
 export default ChatBox;

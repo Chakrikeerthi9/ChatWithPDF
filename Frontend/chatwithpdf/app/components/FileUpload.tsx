@@ -5,15 +5,23 @@ import {
   UploaderProvider,
   type UploadFn,
 } from '@/components/upload/uploader-provider';
+import { useClerkInfo } from "../hooks/ClerkInfo"
 import { useEdgeStore } from '@/lib/edgestore';
 import * as React from 'react';
 import axios from 'axios';
 
-export function FileUpload() {
+export function FileUpload({setUploadId}: {setUploadId: (uploadId: string) => void}) {
   const { edgestore } = useEdgeStore();
+  const userInfo = useClerkInfo();
+  const [isUploading, setIsUploading] = React.useState(false);
+  const [fileUrl, setFileUrl] = React.useState<string | null>(null);
+  const [message, setMessage] = React.useState<string | null>(null);
+
+  console.log(userInfo);
 
   const uploadFn: UploadFn = React.useCallback(
     async ({ file, onProgressChange, signal }) => {
+      setIsUploading(true);
       const res = await edgestore.publicFiles.upload({
         file,
         signal,
@@ -24,20 +32,29 @@ export function FileUpload() {
 
 
       console.log(res.url);
-
       const fileUrl = res.url;
-       await axios.post('http://127.0.0.1:5000/upload', 
-        { fileUrl },
+
+       const response =await axios.post('http://127.0.0.1:5000/upload', 
+        { fileUrl, ...userInfo },
         {
           headers: {
             'Content-Type': 'application/json',
           },
         }
       );
+      if (response.status === 200) {
+        const data = response.data;
+        setMessage(`✅ Uploaded: ID ${data.upload_id}`);
+        setUploadId(data.upload_id.toString());
+        localStorage.setItem("uploadId", data.upload_id.toString());
+      } else {
+        setMessage(`❌ Error: ${response.data.message}`);
+      }
       console.log("upload success")
+      setIsUploading(false);
       return res;
     },
-    [edgestore],
+    [edgestore, userInfo],
   );
 
   return (
@@ -51,7 +68,14 @@ export function FileUpload() {
         }}
         className='w-[90%]'
       />
+      {message && (
+        <p className="mt-4 text-sm text-green-600 dark:text-green-400">
+          {message}
+        </p>
+      )}
     </UploaderProvider>
+    
+    
   );
 }
 
