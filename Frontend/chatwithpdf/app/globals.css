@@ -49,7 +49,7 @@ body, .layout-wrapper {
 }
 
 .bg-home {
-  background-image: url('/imgai.png'); /* adjust path */
+  background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('/imgai.png'); /* adjust path */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -67,7 +67,6 @@ body, .layout-wrapper {
 /* Responsive text */
 h1 {
   font-size: 2rem;
-  margin-bottom: 1rem;
 }
 
 p {

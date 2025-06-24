@@ -4,7 +4,7 @@ import React from 'react'
 
 const Header = ({name}: {name: string}) => {
   return (
-    <header className="w-full bg-gray-100">
+    <header className="w-full bg-gradient-to-b from-sky-50 to-sky-75 border-b border-gray-200">
     <div className="flex flex-row justify-between items-center p-6">
       <div className="flex flex-col items-start">
         <h1 className="text-sm text-gray-600">Hello, <b className="text-blue-800">{name}</b></h1>

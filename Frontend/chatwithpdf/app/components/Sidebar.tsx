@@ -3,7 +3,7 @@ import FileUpload from './FileUpload'
 const Sidebar = ({setUploadId}: {setUploadId: (uploadId: string) => void}) => {
 
   return (
-        <section className=" bg-white h-full flex flex-col p-6">
+        <section className=" bg-white h-full flex flex-col p-6 bg-gradient-to-b from-sky-50 to-sky-75">
           <h1 className="font-semibold text-lg">ChatWith<b className="text-blue-800">PDF</b></h1>
           <h2 className="text-sm text-gray-600 mb-4 italic hidden md:block">
           "ChatWithPDF is a real-time educational tool that empowers users to interactively engage with study materials. It transforms static PDFs into dynamic learning experiences through instant Q&A and summarization."

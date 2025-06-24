@@ -73,7 +73,7 @@ const ChatBox = ({ uploadId }: { uploadId: string }) => {
               </div>
             </div>
             {msg.answer && (
-              <div className="flex justify-start mt-1">
+              <div className="flex justify-start text-left mt-1">
                 <div className="max-w-[80%] px-6 py-4 rounded-2xl bg-gray-100 text-gray-900 text-sm sm:text-base shadow rounded-bl-none my-2">
                   {msg.answer}
                 </div>
@@ -85,7 +85,7 @@ const ChatBox = ({ uploadId }: { uploadId: string }) => {
          {/* Loading animation */}
         {isLoading && (
           <div className="flex justify-start mt-1">
-            <div className="max-w-[80%] px-6 py-4 rounded-2xl bg-gray-100 text-gray-500 text-sm sm:text-base shadow rounded-bl-none my-2 animate-pulse">
+            <div className="max-w-[80%] px-6 py-4 rounded-2xl bg-gray-100 text-gray-700 text-sm sm:text-base shadow rounded-bl-none my-2 animate-pulse">
               Thinking...
             </div>
           </div>

@@ -28,7 +28,6 @@ export function FileUpload({setUploadId}: {setUploadId: (uploadId: string) => vo
       // to add the necessary data to your database
 
 
-      console.log(res.url);
       const fileUrl = res.url;
 
        const response =await axios.post('http://127.0.0.1:5000/upload', 
@@ -59,7 +58,7 @@ export function FileUpload({setUploadId}: {setUploadId: (uploadId: string) => vo
     <UploaderProvider uploadFn={uploadFn} autoUpload>
       <FileUploader
         maxFiles={5}
-        maxSize={1024 * 1024 * 10} // 1 MB
+        maxSize={1024 * 1024 * 10} // 10 MB
         accept={{
           'application/pdf': [],
           'text/plain': ['.pdf'],
@@ -67,7 +66,7 @@ export function FileUpload({setUploadId}: {setUploadId: (uploadId: string) => vo
         className='bg-gray-100 w-full'
       />
       {message && (
-        <p className="mt-4 text-sm text-green-600 dark:text-green-400">
+        <p className="mt-4 text-sm dark:bg-green-700 dark:text-white">
           {message}
         </p>
       )}
