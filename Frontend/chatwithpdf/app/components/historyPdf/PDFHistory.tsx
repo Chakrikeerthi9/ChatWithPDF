@@ -23,7 +23,7 @@ export default function PDFHistory({ onSelect }: { onSelect: (uploadId: number) 
     if (userInfo?.clerk_user_id) {
       fetchHistory();
     }
-  }, [userInfo]);
+  }, [userInfo?.clerk_user_id]);
 
   return (
     <div className="space-y-2">

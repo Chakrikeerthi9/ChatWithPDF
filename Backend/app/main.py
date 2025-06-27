@@ -2,20 +2,46 @@ from flask import Flask
 from flask_cors import CORS
 from flask import request, jsonify
 from app.langchain.app_langchain import get_app_langchain
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from limits.storage import RedisStorage
+from dotenv import load_dotenv
+from flask_limiter.errors import RateLimitExceeded
 from app.db.user_queries import get_or_create_user
 from app.db.queries import insert_upload, insert_chat_log, fetch_uploads_for_user, fetch_chat_logs_for_upload
 import tempfile
 import requests
+import redis
 import os
+
+load_dotenv()
 
 app = Flask(__name__)
 
 CORS(app)
 
+# redis Config
+r = redis.Redis(
+    host='redis-10782.c17.us-east-1-4.ec2.redns.redis-cloud.com',
+    port=10782,
+    decode_responses=True,
+    username="default",
+    password=os.getenv("R_PASSWORD"),
+)
+redis_storage = os.getenv("R_LINK")
+
+# Attach Redis to Flask-Limiter
+limiter = Limiter(
+    app = app,
+    storage_uri=redis_storage,
+    key_func=lambda: request.headers.get("clerk-user-id") or get_remote_address(),
+)
+
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB
+
 
 
 # global variable for app langchain
@@ -63,6 +89,7 @@ def upload_pdf():
     
 
 @app.route("/ask", methods=["POST"])
+@limiter.limit("5 per hour")
 def ask():
     try:
         global app_langchain
@@ -84,7 +111,7 @@ def ask():
         return jsonify({'message': 'Question failed', 'error': str(e)}), 500
 
 
-from app.db.queries import fetch_uploads_for_user, fetch_chat_logs_for_upload
+
 
 @app.route("/history", methods=["POST"])
 def history():
@@ -121,6 +148,13 @@ def chatlog():
         return jsonify({"message": "Failed to fetch chat logs", "error": str(e)}), 500
 
 
+@app.errorhandler(RateLimitExceeded)
+def rate_limit_handler(e):
+    return jsonify({
+        "error": "Rate limit exceeded",
+        "message": str(e.description),
+        "retry_after": e.retry_after
+    }), 429
 
 
 if __name__ == "__main__":

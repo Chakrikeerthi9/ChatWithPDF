@@ -34,13 +34,23 @@ const ChatBox = ({ uploadId }: { uploadId: string }) => {
     try {
       const response = await fetch("http://localhost:5000/ask", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "clerk-user-id": user?.id || "" },
         body: JSON.stringify({ question: currentInput, upload_id: parseInt(uploadId) }),
       });
 
       const data = await response.json();
-      const answer = data.answer;
+      
+      if (response.status === 429) {
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1].answer = "You have reached the rate limit. Please try again later.";
+          return updated;
+        })
+        setIsLoading(false);
+        return;
+      }
 
+      const answer = data.answer;
       // 2. Add answer to the last question
       setMessages((prev) => {
         const updated = [...prev];

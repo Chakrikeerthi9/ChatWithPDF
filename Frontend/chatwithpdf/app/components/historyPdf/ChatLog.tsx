@@ -10,7 +10,7 @@ export default function ChatLog({ uploadId }: { uploadId: number }) {
   useEffect(() => {
     const fetchLog = async () => {
       try {
-        const res = await axios.post('http://127.0.0.1:5000/chatlog', {
+          const res = await axios.post('http://127.0.0.1:5000/chatlog', {
           upload_id: uploadId,
         });
         setLog(res.data.chatlog);
