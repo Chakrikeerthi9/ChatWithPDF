@@ -147,7 +147,7 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser.
 - UI built using:
   - Tailwind CSS
   - `shadcn/ui`
-- Voice & LLM responses powered by:
+- LLM responses powered by:
   - Anthropic Claude
   - LangChain + Flask API
 
